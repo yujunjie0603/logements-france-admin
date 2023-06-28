@@ -1,10 +1,10 @@
-import Layout from '@/components/layout'
+import Layout from '@/components/Layout'
 import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 
-function products() {
+function Products() {
 
   const [products, setProducts] = useState([]);
 
@@ -29,7 +29,7 @@ function products() {
         </thead>
         <tbody>
           {products.map(product => (
-            <tr>
+            <tr key={product._id}>
               <td>{product.title}</td>
               <td>
                 <Link href={'/products/edit/' + product._id}>
@@ -54,4 +54,4 @@ function products() {
   )
 }
 
-export default products
+export default Products

@@ -1,8 +1,12 @@
-import Layout from "@/components/layout"
+import Layout from "@/components/Layout"
 import axios from "axios";
 import { redirect } from "next/dist/server/api-utils";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Spinner from "@/components/Spinner"
+import {ReactSortable} from "react-sortablejs";
+import categories from "@/pages/categories";
+
 function ProductForm(
     {
         _id,
@@ -10,20 +14,26 @@ function ProductForm(
         description: existingDescription, 
         price: existingPrice,
         images: existingImages,
+        category:assignedCategory,
+        properties:assignedProperties,
     }
     ) {
     const [title, setTitle] = useState(existingTitle || '');
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
     const [goToProduct, setGoToProduct] = useState(false);
+    const [productProperties,setProductProperties] = useState(assignedProperties || {});
     const [images, setImages] = useState(existingImages || '');
     const [isUploading,setIsUploading] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [category, setCategory] = useState(assignedCategory || '');
     const Router = useRouter();
     async function saveProduct(ev) {
         ev.preventDefault();
-        const data = {title, description, price, images};
+        const data = {title, description, price, images, category, 
+            properties:productProperties
+        };
         if (_id) {
-            console.log("**********************");
             await axios.put('/api/products', {...data, _id});
         } else {
             await axios.post('/api/products', data);
@@ -33,6 +43,19 @@ function ProductForm(
     if (goToProduct) {
         Router.push('/products');
     }
+    function setProductProp(propName,value) {
+        setProductProperties(prev => {
+          const newProductProps = {...prev};
+          newProductProps[propName] = value;
+          return newProductProps;
+        });
+      }
+    useEffect( () => {
+        axios.get("/api/categories").then(response => {
+            console.log(response.data);
+            setCategories(response.data);
+        });
+    }, [])
 
     async function uploadImages(ev) {
         const files = ev.target?.files;
@@ -43,17 +66,56 @@ function ProductForm(
             data.append('file', file);
           }
           const res = await axios.post('/api/upload', data);
-          console.log(res.data);
+
         //   setImages(oldImages => {
         //     return [...oldImages, ...res.data.links];
         //   });
           setIsUploading(false);
         }
     }
+
+    const propertiesToFill = [];
+    if (categories.length > 0 && category) {
+      let catInfo = categories.find(({_id}) => _id === category);
+      console.log(category);
+      console.log("***********************");
+      propertiesToFill.push(...catInfo.properties);
+      while(catInfo?.parent?._id) {
+        const parentCat = categories.find(({_id}) => _id === catInfo?.parent?._id);
+        propertiesToFill.push(...parentCat.properties);
+        catInfo = parentCat;
+      }
+    }
+
     return (
         <form onSubmit={saveProduct}>
             <label>Name : </label>
             <input type="text" placeholder="product name" value={title} onChange={ev => setTitle(ev.target.value)} />
+            <select value={category}
+                onChange={ev => setCategory(ev.target.value)}>
+                <option value="">No Category</option>
+                {categories.length > 0 && categories.map(c => (
+                    <option key={c._id} value={c._id}>
+                        {c.name}
+                    </option>
+                ))}            
+            </select>
+            {propertiesToFill.length > 0 && propertiesToFill.map(p => (
+            <div key={p.name} className="">
+                <label>{p.name[0].toUpperCase()+p.name.substring(1)}</label>
+                <div>
+                <select value={productProperties[p.name]}
+                        onChange={ev =>
+                            setProductProp(p.name,ev.target.value)
+                        }
+                >
+                    {p.values.map(v => (
+                    <option key={v} value={v}>{v}</option>
+                    ))}
+                </select>
+                </div>
+            </div>
+            ))}            
             <label>
                 Photos
             </label>

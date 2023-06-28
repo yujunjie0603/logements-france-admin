@@ -8,7 +8,6 @@ export default function Nav({show}) {
   const inactiveIcon = 'w-6 h-6';
   const activeIcon = inactiveIcon + ' text-primary';
   const router = useRouter();
-  console.log({router});
   const {pathname} = router;
   async function logout() {
     await router.push('/');

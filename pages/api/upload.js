@@ -10,7 +10,6 @@ async function handle(req, res) {
             resolve({fields, files});
         });
     });
-    
     console.log(files);
     console.log(fields);
     return res.json('ok');
