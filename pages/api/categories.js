@@ -1,9 +1,11 @@
 import {mongooseConnect} from "@/lib/mongoose"
 import {Category} from '@/models/Category';
+import { isAdminRequest } from "./auth/[...nextauth]";
 
 async function handle(req, res) {
     const {method} = req;
     await mongooseConnect();
+    await isAdminRequest(req, res);
     if (method === 'POST') {
         const {name, parentCategory, properties} = req.body;
         const categoryDoc = await Category.create({

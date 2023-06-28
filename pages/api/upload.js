@@ -2,7 +2,8 @@ import React from 'react'
 import multiparty from 'multiparty';
 
 async function handle(req, res) {
-
+    await mongooseConnect();
+    await isAdminRequest(req, res);
     const form = new multiparty.Form();
     const {fields, files} = await new Promise((resolve, reject) => {
         form.parse(req, async(err, fields, files) => {
@@ -10,8 +11,6 @@ async function handle(req, res) {
             resolve({fields, files});
         });
     });
-    console.log(files);
-    console.log(fields);
     return res.json('ok');
 }
 
