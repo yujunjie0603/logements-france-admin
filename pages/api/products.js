@@ -3,6 +3,7 @@ import axios from "axios";
 import mongoose from "mongoose";
 import {Product} from "@/models/Product"
 import {mongooseConnect} from "@/lib/mongoose"
+import { isAdminRequest } from "./auth/[...nextauth]";
 
 
 export default async function handler(req, res) {
