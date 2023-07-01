@@ -2,7 +2,7 @@ import Layout from '@/components/Layout'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-function ordersPage() {
+function OrdersPage() {
     const [orders, setOrders] = useState([]);
     useEffect(() => {
         axios.get('/api/orders').then(response => {
@@ -51,4 +51,4 @@ function ordersPage() {
   );
 }
 
-export default ordersPage
+export default OrdersPage
