@@ -32,7 +32,7 @@ function DeleteProductPage() {
         <Layout>
             <h1 className='text-center'>
                 
-                Do you really want to delete " product : {productInfo?.title} " ?
+                Do you really want to delete product : {productInfo?.title} ?
             </h1>
             <div className='flex gap-2 text-center'>
 
