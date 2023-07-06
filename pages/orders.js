@@ -36,10 +36,12 @@ function OrdersPage() {
                     {order.streetAddress}
                     </td>
                     <td>
-                    {order.line_items.map(l => (
+                    {order.line_items.map((l,i) => (
                         <>
-                        {l.price_data?.product_data.name} x
-                        {l.quantity}<br />
+                        <lable key={i}>
+                            {l.price_data?.product_data.name} x
+                            {l.quantity}<br />
+                        </lable>
                         </>
                     ))}
                     </td>
