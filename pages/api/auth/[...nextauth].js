@@ -18,6 +18,7 @@ export const authOptions = {
     }),
   ],
   adapter: MongoDBAdapter(clientPromise),
+  secret: process.env.NEXT_PUBLIC_SECRET,
   callbacks: {
     session: async ({session,token,user}) => {
       if (await isAdminEmail(session?.user?.email)) {
