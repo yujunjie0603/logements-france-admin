@@ -77,8 +77,6 @@ function ProductForm(
     const propertiesToFill = [];
     if (categories.length > 0 && category) {
       let catInfo = categories.find(({_id}) => _id === category);
-      console.log(category);
-      console.log("***********************");
       propertiesToFill.push(...catInfo.properties);
       while(catInfo?.parent?._id) {
         const parentCat = categories.find(({_id}) => _id === catInfo?.parent?._id);

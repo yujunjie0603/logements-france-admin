@@ -9,6 +9,8 @@ const LogementsSchema = new Schema({
     price_origin_apartment: {type: String},
     price_promo_apartment: {type: String},
     adress: {type:String, require: true},
+    cp: {type:String, require: true},
+    city: {type:String, require: true},
     images: [{type:String}],
     info_apartment: String,
     tels: [{type:String}],

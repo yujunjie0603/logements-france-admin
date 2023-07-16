@@ -9,7 +9,8 @@ import { isAdminRequest } from "./auth/[...nextauth]";
 export default async function handler(req, res) {
     const {method} = req;
     await mongooseConnect();
-    await isAdminRequest(req, res);    
+    await isAdminRequest(req, res);
+    console.log(req.body)
     if (method === 'GET') {
         if (req.query?.id) {
           res.json(await Logement.findOne({_id:req.query.id}));
@@ -20,35 +21,33 @@ export default async function handler(req, res) {
     if (method === 'POST') {
         const {
           name_resident,
-          description,
           type_apartment,
           price_origin_apartment,
           price_promo_apartment,
           adress,
+          cp,
+          city,
           images,
           info_apartment,
           tels,
           advantages,
           services_include,
-          services_carte,
-          category,
-          properties,
+          services_carte
         } = req.body;
         const logementDoc = await Logement.create({
           name_resident,
-          description,
           type_apartment,
           price_origin_apartment,
           price_promo_apartment,
           adress,
+          cp,
+          city,          
           images,
           info_apartment,
           tels,
           advantages,
           services_include,
-          services_carte,
-          category,
-          properties,
+          services_carte
         })
         res.json(logementDoc);
     }
@@ -61,29 +60,43 @@ export default async function handler(req, res) {
         price_origin_apartment,
         price_promo_apartment,
         adress,
+        cp,
+        city,        
         images,
         info_apartment,
         tels,
         advantages,
         services_include,
         services_carte,
-        category,
-        properties,
+        _id
       } = req.body;
-        await Logement.updateOne({_id}, {name_resident,
-          description,
-          type_apartment,
-          price_origin_apartment,
-          price_promo_apartment,
-          adress,
-          images,
-          info_apartment,
-          tels,
-          advantages,
-          services_include,
-          services_carte,
-          category,
-          properties});
+        console.log(_id)
+        try{
+          console.log(info_apartment)
+          await Logement.updateOne({_id}, {name_resident,
+            description,
+            type_apartment,
+            price_origin_apartment,
+            price_promo_apartment,
+            adress,
+            cp,
+            city,          
+            images,
+            info_apartment,
+            tels,
+            advantages,
+            services_include,
+            services_carte
+          }).then((obj) => {
+            console.log('Updated - ' + JSON.stringify(obj));
+            
+          }).catch((err) => {
+            console.log('Error: ' + err);
+          });
+        } catch (error) {
+          
+          console.log(error);
+        }
         res.json(true);
       }
 

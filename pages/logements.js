@@ -26,6 +26,8 @@ function Logements() {
             <td> Logement Name </td>
             <td> Type logement</td>
             <td> Adresse </td>
+            <td> city </td>
+            <td> CP </td>
             <td> price_origin_apartment </td>
             <td> price_promo_apartment </td>
             <td></td>
@@ -37,6 +39,8 @@ function Logements() {
               <td>{logement.name_resident}</td>
               <td>{logement.type_apartment}</td>
               <td>{logement.adress}</td>
+              <td>{logement.city}</td>
+              <td>{logement.cp}</td>
               <td>{logement.price_origin_apartment}</td>
               <td>{logement.price_promo_apartment}</td>
               <td>
