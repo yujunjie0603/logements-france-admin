@@ -15,6 +15,8 @@ function LogementForm(
         price_origin_apartment: existingPriceOriginApartment,
         price_promo_apartment: existingPricePromoApartment,
         adress: existingAdress,
+        city: existingCity,
+        cp: existingCp,
         images: existingImages,
         info_apartment: existingInfoApartment,
         tels: existingTels,
@@ -28,6 +30,8 @@ function LogementForm(
     const [priceOriginApartment, setPriceOriginApartment] = useState(existingPriceOriginApartment || '');
     const [pricePromoApartment, setPricePromoApartment] = useState(existingPricePromoApartment || '');
     const [adress, setAdress] = useState(existingAdress || '');
+    const [city, setCity] = useState(existingCity || '');
+    const [cp, setCp] = useState(existingCp || '');
     const [infoApartment, setInfoApartment] = useState(existingInfoApartment || '');
     const [tels, setTels] = useState(existingTels || '');
     const [advantages, setAdvantages] = useState(existingAdvantages || '');
@@ -66,10 +70,6 @@ function LogementForm(
             data.append('file', file);
           }
           const res = await axios.post('/api/upload', data);
-
-        //   setImages(oldImages => {
-        //     return [...oldImages, ...res.data.links];
-        //   });
           setIsUploading(false);
         }
     }
@@ -89,6 +89,13 @@ function LogementForm(
         <form onSubmit={saveLogement}>
             <label>Name : </label>
             <input type="text" placeholder="logement name" value={nameResident} onChange={ev => setNameResident(ev.target.value)} />      
+            <label>Adresse : </label>
+            <input type="text" placeholder="adresse" value={adress} onChange={ev => setAdress(ev.target.value)} />      
+            <label>Ville : </label>
+            <input type="text" placeholder="ville" value={city} onChange={ev => setVille(ev.target.value)} />      
+            <label>CP : </label>
+            <input type="text" placeholder="cp" value={cp} onChange={ev => setCp(ev.target.value)} />      
+            
             <label>
                 Photos
             </label>
