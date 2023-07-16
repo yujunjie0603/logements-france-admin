@@ -19,8 +19,6 @@ function EditLogementPage() {
             setLogementInfo(response.data);
         })
     }, [id])
-    console.log(logementInfo);
-    console.log('------------------------');
     return (
         <Layout>
             <h1>Edit logement</h1>

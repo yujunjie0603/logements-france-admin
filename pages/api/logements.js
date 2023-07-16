@@ -10,7 +10,6 @@ export default async function handler(req, res) {
     const {method} = req;
     await mongooseConnect();
     await isAdminRequest(req, res);
-    console.log(req.body)
     if (method === 'GET') {
         if (req.query?.id) {
           res.json(await Logement.findOne({_id:req.query.id}));
@@ -70,9 +69,7 @@ export default async function handler(req, res) {
         services_carte,
         _id
       } = req.body;
-        console.log(_id)
         try{
-          console.log(info_apartment)
           await Logement.updateOne({_id}, {name_resident,
             description,
             type_apartment,
@@ -89,12 +86,10 @@ export default async function handler(req, res) {
             services_carte
           }).then((obj) => {
             console.log('Updated - ' + JSON.stringify(obj));
-            
           }).catch((err) => {
             console.log('Error: ' + err);
           });
         } catch (error) {
-          
           console.log(error);
         }
         res.json(true);
