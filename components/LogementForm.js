@@ -22,7 +22,9 @@ function LogementForm(
         tels: existingTels,
         advantages: existingAdvantages,
         services_include: existingServicesInclude,
-        services_carte: existingServicesCarte
+        services_carte: existingServicesCarte,
+        category:assignedCategory,
+        properties:assignedProperties        
     }
     ) {
     const [nameResident, setNameResident] = useState(existingNameResident || '');
@@ -40,6 +42,8 @@ function LogementForm(
     const [goToLogement, setGoToLogement] = useState(false);
     const [images, setImages] = useState(existingImages || '');
     const [isUploading,setIsUploading] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [category, setCategory] = useState(assignedCategory || '');    
     const Router = useRouter();
     async function saveLogement(ev) {
         ev.preventDefault();
@@ -60,7 +64,7 @@ function LogementForm(
     if (goToLogement) {
         Router.push('/logements');
     }
-
+    const [logementProperties,setLogementProperties] = useState(assignedProperties || {});
     async function uploadImages(ev) {
         const files = ev.target?.files;
         if (files?.length > 0) {
@@ -73,6 +77,12 @@ function LogementForm(
           setIsUploading(false);
         }
     }
+    useEffect( () => {
+        axios.get("/api/categories").then(response => {
+            console.log(response.data);
+            setCategories(response.data);
+        });
+    }, [])
 
     const propertiesToFill = [];
     if (categories.length > 0 && category) {
@@ -94,8 +104,32 @@ function LogementForm(
             <label>Ville : </label>
             <input type="text" placeholder="ville" value={city} onChange={ev => setVille(ev.target.value)} />      
             <label>CP : </label>
-            <input type="text" placeholder="cp" value={cp} onChange={ev => setCp(ev.target.value)} />      
-            
+            <input type="text" placeholder="cp" value={cp} onChange={ev => setCp(ev.target.value)} />
+            <select value={category}
+                onChange={ev => setCategory(ev.target.value)}>
+                <option value="">No Category</option>
+                {categories.length > 0 && categories.map(c => (
+                    <option key={c._id} value={c._id}>
+                        {c.name}
+                    </option>
+                ))}            
+            </select>
+            {propertiesToFill.length > 0 && propertiesToFill.map(p => (
+            <div key={p.name} className="">
+                <label>{p.name[0]?.toUpperCase()+p.name.substring(1)}</label>
+                <div>
+                <select value={logementProperties[p.name]}
+                        onChange={ev =>
+                            setLogementProp(p.name,ev.target.value)
+                        }
+                >
+                    {p.values.map(v => (
+                    <option key={v} value={v}>{v}</option>
+                    ))}
+                </select>
+                </div>
+            </div>
+            ))}            
             <label>
                 Photos
             </label>
@@ -110,7 +144,6 @@ function LogementForm(
                 {!images?.length && (
                     <div> No Images </div>
                 )}
-
             </div>
             <label>info Apartment : </label>
             <textarea placeholder="info Apartment" onChange={ev => setInfoApartment(ev.target.value)} value={infoApartment} />

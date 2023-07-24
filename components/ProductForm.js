@@ -77,7 +77,9 @@ function ProductForm(
     const propertiesToFill = [];
     if (categories.length > 0 && category) {
       let catInfo = categories.find(({_id}) => _id === category);
-      propertiesToFill.push(...catInfo.properties);
+      if (catInfo?.properties) {
+          propertiesToFill.push(...catInfo.properties);
+      }
       while(catInfo?.parent?._id) {
         const parentCat = categories.find(({_id}) => _id === catInfo?.parent?._id);
         propertiesToFill.push(...parentCat.properties);
@@ -96,11 +98,11 @@ function ProductForm(
                     <option key={c._id} value={c._id}>
                         {c.name}
                     </option>
-                ))}            
+                ))}
             </select>
             {propertiesToFill.length > 0 && propertiesToFill.map(p => (
             <div key={p.name} className="">
-                <label>{p.name[0].toUpperCase()+p.name.substring(1)}</label>
+                <label>{p.name[0]?.toUpperCase()+p.name.substring(1)}</label>
                 <div>
                 <select value={productProperties[p.name]}
                         onChange={ev =>
@@ -113,7 +115,7 @@ function ProductForm(
                 </select>
                 </div>
             </div>
-            ))}            
+            ))}
             <label>
                 Photos
             </label>
